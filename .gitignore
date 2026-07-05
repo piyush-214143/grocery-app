@@ -3,3 +3,6 @@ node_modules/
 
 # macOS
 .DS_Store
+
+# Contains real passwords/API keys for reference -- never commit
+PROJECT_INFO.md
