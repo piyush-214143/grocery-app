@@ -78,9 +78,12 @@ export async function deleteProduct(id: string): Promise<void> {
   await deleteDoc(doc(db, COLLECTIONS.products, id));
 }
 
-// Resizing/compression happens client-side before this is called (see
-// ProductFormScreen, which uses expo-image-manipulator) to stay well within
-// Storage's free 5GB/1GB-per-day bandwidth quota.
+// Not currently wired into the UI: Firebase Storage now requires the Blaze
+// plan to provision a bucket (Feb 2026 policy change), so ProductFormScreen
+// cycles picsum.photos placeholders instead of uploading real photos. Re-wire
+// this in once the project is on Blaze -- pass an already-resized/compressed
+// local URI (e.g. via expo-image-manipulator) to stay within Storage's free
+// 5GB/1GB-per-day quota.
 export async function uploadProductImage(localUri: string, productId: string): Promise<string> {
   const response = await fetch(localUri);
   const blob = await response.blob();

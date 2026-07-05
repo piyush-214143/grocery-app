@@ -32,8 +32,8 @@ push helper). Built for a single small store, free-tier only.
 - **Push notifications need a dev client, not Expo Go.** Expo Go dropped support
   for remote push on Android from SDK 53 onward. Both apps already have
   `expo-dev-client` installed for this. Everything else in both apps (browsing,
-  cart, checkout, image upload, etc.) works fine in plain Expo Go — you only need
-  a dev client build to actually test push notifications.
+  cart, checkout, product management, etc.) works fine in plain Expo Go — you only
+  need a dev client build to actually test push notifications.
 - **Offline support is memory-only, not disk-persisted.** The `firebase` JS SDK's
   disk cache (`persistentLocalCache`) needs IndexedDB, which React Native doesn't
   have, so Firestore silently falls back to an in-memory cache. That's enough to
@@ -47,41 +47,35 @@ push helper). Built for a single small store, free-tier only.
   `/admins/{uid}` as the shop owner; only the owner-app's first-time-setup screen
   ever writes that doc, and the client can never update/delete it once created.
   Good enough for one shop; not something you'd want for a public multi-tenant app.
+- **No real product photo upload (for now).** As of a February 2026 policy
+  change, provisioning a Cloud Storage bucket at all now requires the Blaze
+  plan (a card on file), even though usage would likely stay within Storage's
+  free no-cost quota. Since this project is intentionally staying on Spark
+  with zero billing risk, the owner app's product form cycles through
+  picsum.photos placeholders instead of uploading real photos (tap the image
+  to get a different placeholder). `uploadProductImage()` in
+  `owner-app/src/services/firestoreService.ts` and `storage.rules` are both
+  still there, ready to wire back into `ProductFormScreen.tsx` the day you
+  add a card and upgrade to Blaze.
 
-## 1. Create the Firebase project
+## Current live status
 
-1. https://console.firebase.google.com → **Add project** (Spark/free plan is fine).
-2. **Build > Authentication > Get started > Sign-in method** → enable **Email/Password**.
-3. **Build > Firestore Database > Create database** → start in **production mode**
-   (our `firestore.rules` handles access control).
-4. **Build > Storage > Get started** → production mode.
-5. **Project settings > General > Your apps**: add **two Web apps** (⚙️ icon →
-   "Web"), named e.g. "Customer" and "Owner". Each gives you a
-   `apiKey`/`authDomain`/… config block — these power the `firebase` JS SDK in
-   each app (you can reuse the exact same config for both if you don't care about
-   separating them; the two-web-app split just keeps them tidy).
-6. Still in **Your apps**, also add **two Android apps** with package names
-   `com.localgrocery.customer` and `com.localgrocery.owner` (must match
-   `app.config.js` in each folder). Download each `google-services.json` and drop
-   it at `customer-app/google-services.json` and `owner-app/google-services.json`
-   respectively — these are only needed for native FCM push token retrieval on
-   Android and are gitignored.
+- **Firebase project:** `local-grocery-app-piyush` (created, Firestore database live
+  in `asia-south1`, `firestore.rules` + `firestore.indexes.json` deployed).
+- **Both apps' `.env` files** are already filled in with the real Firebase config,
+  and `google-services.json` is already downloaded into both `customer-app/` and
+  `owner-app/`.
+- **Storage:** intentionally skipped (see above) — `storage.rules` is not deployed.
+- **Still needed from you:** enable Email/Password sign-in (one console click,
+  step 1 below), then seed data and run the apps (steps 2–3).
 
-## 2. Configure each app
+## 1. Enable Email/Password sign-in (one-time, console only)
 
-In both `customer-app/` and `owner-app/`, copy `.env.example` to `.env` and fill
-in the Web app config from step 1.5 (same Firebase project values in both `.env`
-files; only `FIREBASE_APP_ID_CUSTOMER` / `FIREBASE_APP_ID_OWNER` differ).
+There's no CLI command for toggling Auth providers. Open
+https://console.firebase.google.com/project/local-grocery-app-piyush/authentication/providers
+→ click **Email/Password** → **Enable** → **Save**.
 
-## 3. Deploy security rules
-
-```bash
-npx firebase-tools login
-npx firebase-tools use --add          # pick your project, run from the repo root
-npx firebase-tools deploy --only firestore:rules,firestore:indexes,storage
-```
-
-## 4. Seed sample data
+## 2. Seed sample data
 
 ```bash
 cd scripts
@@ -95,7 +89,7 @@ This creates 1 shop doc, 5 categories, and ~24 products with picsum.photos
 placeholder images so both apps are demo-ready immediately. Edit the shop's real
 phone/UPI ID/address afterwards from the owner app's Shop Settings screen.
 
-## 5. Run the apps
+## 3. Run the apps
 
 ```bash
 cd customer-app && npm install && npx expo start   # then press 'i' or 'a', or scan with Expo Go
@@ -119,7 +113,7 @@ npx eas build --profile development --platform android
 Install the resulting build on a physical device (push tokens don't work in
 simulators/emulators), then `npx expo start --dev-client`.
 
-## 6. End-to-end smoke test
+## 4. End-to-end smoke test
 
 1. Owner app: log in → Shop Settings → confirm shop is "Open" → Products tab shows
    the seeded catalog.

@@ -2,18 +2,16 @@ import { useEffect, useState } from 'react';
 import { View, Text, TextInput, Pressable, ScrollView, Switch, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, DEFAULT_SHOP_ID, type ProductUnit } from '@grocery/shared';
 import { useCatalogStore } from '../store/useCatalogStore';
-import { addProduct, updateProduct, deleteProduct, uploadProductImage } from '../services/firestoreService';
+import { addProduct, updateProduct, deleteProduct } from '../services/firestoreService';
 import type { RootStackParamList } from '../navigation/types';
 
 const UNITS: ProductUnit[] = ['kg', 'litre', 'pack', 'piece', 'dozen'];
-const PLACEHOLDER_IMAGE = 'https://picsum.photos/seed/product/400/400';
+const placeholderFor = (seed: string) => `https://picsum.photos/seed/${encodeURIComponent(seed)}/400/400`;
 
 export function ProductFormScreen() {
   const { t } = useTranslation();
@@ -30,8 +28,7 @@ export function ProductFormScreen() {
   const [price, setPrice] = useState(existing?.price?.toString() ?? '');
   const [unit, setUnit] = useState<ProductUnit>(existing?.unit ?? 'kg');
   const [categoryId, setCategoryId] = useState(existing?.categoryId ?? categories[0]?.id ?? '');
-  const [imageUri, setImageUri] = useState(existing?.imageUrl ?? '');
-  const [localImageUri, setLocalImageUri] = useState<string | null>(null);
+  const [imageUri, setImageUri] = useState(existing?.imageUrl ?? placeholderFor(route.params.productId ?? 'new-product'));
   const [isAvailable, setIsAvailable] = useState(existing?.isAvailable ?? true);
   const [isDailyItem, setIsDailyItem] = useState(existing?.isDailyItem ?? false);
   const [isFeatured, setIsFeatured] = useState(existing?.isFeatured ?? false);
@@ -41,18 +38,13 @@ export function ProductFormScreen() {
     navigation.setOptions({ title: existing ? t('common.edit') : t('owner.addProduct') });
   }, [existing]);
 
-  async function pickImage() {
-    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permission.granted) return;
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      quality: 0.8,
-      aspect: [1, 1],
-      allowsEditing: true,
-    });
-    if (!result.canceled && result.assets[0]) {
-      setLocalImageUri(result.assets[0].uri);
-    }
+  // Real photo upload needs Firebase Storage, which (since Feb 2026) requires
+  // the Blaze plan to provision a bucket at all. Until this project is on
+  // Blaze, "uploading" just cycles to a different picsum.photos placeholder
+  // -- see uploadProductImage() in firestoreService.ts for the real upload
+  // path, ready to wire back in once Storage is enabled.
+  function shufflePlaceholder() {
+    setImageUri(placeholderFor(`${nameEn || 'product'}-${Date.now()}`));
   }
 
   async function handleSave() {
@@ -62,20 +54,6 @@ export function ProductFormScreen() {
     }
     setSaving(true);
     try {
-      const productId = existing?.id ?? `${Date.now()}`;
-      let finalImageUrl = imageUri || PLACEHOLDER_IMAGE;
-
-      if (localImageUri) {
-        // Compress to a max 800px-wide JPEG before upload to stay well within
-        // Firebase Storage's free-tier bandwidth/storage limits.
-        const manipulated = await ImageManipulator.manipulateAsync(
-          localImageUri,
-          [{ resize: { width: 800 } }],
-          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
-        );
-        finalImageUrl = await uploadProductImage(manipulated.uri, productId);
-      }
-
       const now = Date.now();
       const payload = {
         shopId: DEFAULT_SHOP_ID,
@@ -86,7 +64,7 @@ export function ProductFormScreen() {
         description_hi: descHi.trim(),
         price: parseFloat(price),
         unit,
-        imageUrl: finalImageUrl,
+        imageUrl: imageUri,
         isAvailable,
         isDailyItem,
         isFeatured,
@@ -124,9 +102,9 @@ export function ProductFormScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Pressable onPress={pickImage} style={styles.imagePicker}>
-          <Image source={{ uri: localImageUri ?? imageUri ?? PLACEHOLDER_IMAGE }} style={styles.image} contentFit="cover" />
-          <Text style={styles.imagePickerText}>{t('owner.uploadImage')}</Text>
+        <Pressable onPress={shufflePlaceholder} style={styles.imagePicker}>
+          <Image source={{ uri: imageUri }} style={styles.image} contentFit="cover" />
+          <Text style={styles.imagePickerText}>Try another placeholder image</Text>
         </Pressable>
 
         <TextInput style={styles.input} placeholder={t('owner.productNameEn')} placeholderTextColor={COLORS.textMuted} value={nameEn} onChangeText={setNameEn} />

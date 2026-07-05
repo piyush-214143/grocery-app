@@ -41,17 +41,7 @@ module.exports = {
       icon: './assets/icon.png',
       color: '#EF6C00',
     },
-    plugins: [
-      'expo-image',
-      'expo-notifications',
-      [
-        'expo-image-picker',
-        {
-          photosPermission: 'Allow the app to access your photos so you can upload product images.',
-          cameraPermission: 'Allow the app to use your camera so you can photograph products.',
-        },
-      ],
-    ],
+    plugins: ['expo-image', 'expo-notifications'],
     extra: {
       firebase: {
         apiKey: process.env.FIREBASE_API_KEY,
