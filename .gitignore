@@ -1,0 +1,5 @@
+# Root-level node_modules (npm workspaces hoist most deps here)
+node_modules/
+
+# macOS
+.DS_Store

@@ -1,0 +1,149 @@
+{
+  "tabs": {
+    "home": "Home",
+    "dailyItems": "Daily",
+    "orders": "Orders",
+    "profile": "Profile"
+  },
+  "common": {
+    "appNameCustomer": "Local Grocery",
+    "appNameOwner": "Grocery Owner",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "back": "Back",
+    "retry": "Retry",
+    "noInternet": "No internet connection",
+    "yes": "Yes",
+    "no": "No",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "language": "Language",
+    "logout": "Logout",
+    "search": "Search"
+  },
+  "auth": {
+    "welcome": "Welcome",
+    "email": "Email",
+    "password": "Password",
+    "name": "Full Name",
+    "phone": "Phone Number",
+    "login": "Log In",
+    "signup": "Sign Up",
+    "createAccount": "Create an account",
+    "haveAccount": "Already have an account? Log in",
+    "noAccount": "New here? Create an account",
+    "chooseLanguage": "Choose your language"
+  },
+  "home": {
+    "categories": "Categories",
+    "dailyEssentials": "Daily Essentials",
+    "featured": "Featured Items",
+    "shopClosed": "Shop is currently closed",
+    "shopOpen": "Open now",
+    "searchPlaceholder": "Search for milk, bread, vegetables..."
+  },
+  "product": {
+    "addToCart": "Add",
+    "outOfStock": "Out of stock",
+    "description": "Description"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
+    "subtotal": "Subtotal",
+    "minOrderWarning": "Add items worth {{amount}} more to reach the minimum order",
+    "proceedToOrder": "Proceed to Order",
+    "remove": "Remove"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "deliveryAddress": "Delivery Address",
+    "addAddress": "Add new address",
+    "paymentMode": "Payment Method",
+    "cod": "Cash on Delivery",
+    "upi": "Pay via UPI",
+    "noteToShop": "Note for the shop (optional)",
+    "notePlaceholder": "e.g. ripe bananas please",
+    "placeOrder": "Place Order",
+    "payWithUpiApp": "Pay with any UPI app"
+  },
+  "orderConfirmation": {
+    "title": "Order Placed!",
+    "orderId": "Order ID",
+    "thankYou": "Thank you, your order has been sent to the shop.",
+    "callShop": "Call Shop",
+    "whatsappShop": "WhatsApp Shop",
+    "viewOrders": "View My Orders"
+  },
+  "orders": {
+    "title": "My Orders",
+    "noOrders": "You haven't placed any orders yet",
+    "orderDetail": "Order Detail",
+    "repeatOrder": "Repeat this order",
+    "items": "Items",
+    "total": "Total"
+  },
+  "profile": {
+    "title": "Profile",
+    "savedAddresses": "Saved Addresses",
+    "settings": "Settings"
+  },
+  "dailyItems": {
+    "title": "Daily Essentials",
+    "subtitle": "Your everyday items, one tap away",
+    "quickReorder": "Reorder Usual List"
+  },
+  "orderStatus": {
+    "placed": "Order Placed",
+    "accepted": "Accepted",
+    "packed": "Packed",
+    "out_for_delivery": "Out for Delivery",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "owner": {
+    "dashboard": "Dashboard",
+    "todayOrders": "Today's Orders",
+    "pendingOrders": "Pending",
+    "todayRevenue": "Today's Revenue",
+    "shopStatus": "Shop Status",
+    "openForOrders": "Open for orders",
+    "closed": "Closed",
+    "liveOrders": "Live Orders",
+    "orderHistory": "Order History",
+    "manageProducts": "Manage Products",
+    "manageCategories": "Manage Categories",
+    "shopSettings": "Shop Settings",
+    "addProduct": "Add Product",
+    "addCategory": "Add Category",
+    "productNameEn": "Product Name (English)",
+    "productNameHi": "Product Name (Hindi)",
+    "descriptionEn": "Description (English)",
+    "descriptionHi": "Description (Hindi)",
+    "price": "Price",
+    "unit": "Unit",
+    "category": "Category",
+    "uploadImage": "Upload Image",
+    "available": "Available",
+    "dailyItem": "Daily Item",
+    "featured": "Featured",
+    "shopName": "Shop Name",
+    "ownerPhone": "Owner Phone",
+    "ownerWhatsapp": "Owner WhatsApp",
+    "address": "Address",
+    "upiId": "UPI ID",
+    "minOrderAmount": "Minimum Order Amount",
+    "deliveryRadius": "Delivery Radius (km)",
+    "openingHours": "Opening Hours",
+    "acceptOrder": "Accept",
+    "markPacked": "Mark Packed",
+    "markOutForDelivery": "Out for Delivery",
+    "markDelivered": "Mark Delivered",
+    "cancelOrder": "Cancel Order",
+    "cancelReason": "Reason for cancellation"
+  }
+}

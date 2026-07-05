@@ -1,0 +1,63 @@
+rules_version = '2';
+
+// Single-shop v1: there's no Cloud Functions / custom-claims layer (that
+// needs the Blaze plan), so "is this user the shop owner" is decided by a
+// client-writable /admins/{uid} doc instead. Only the signed-in user can
+// ever create their OWN admin doc (see below), and only the owner-app's
+// first-time-setup flow does that -- the customer app never touches this
+// collection. Good enough for one small store; swap for custom claims if
+// this ever needs to be bulletproof against a malicious client.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.isOwner == true;
+    }
+
+    match /admins/{uid} {
+      // No update/delete from the client: once set, an admin flag can't be
+      // self-revoked or tampered with, even by the account that owns it.
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow create: if isSignedIn() && request.auth.uid == uid && request.resource.data.isOwner == true;
+      allow update, delete: if false;
+    }
+
+    match /shops/{shopId} {
+      allow read: if isSignedIn();
+      allow write: if isOwner();
+    }
+
+    match /categories/{categoryId} {
+      allow read: if isSignedIn();
+      allow write: if isOwner();
+    }
+
+    match /products/{productId} {
+      allow read: if isSignedIn();
+      allow write: if isOwner();
+    }
+
+    match /users/{userId} {
+      // A customer manages their own profile; the owner needs read access
+      // to look up a customer's fcmToken/phone when a new order comes in.
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+      allow read: if isOwner();
+    }
+
+    match /orders/{orderId} {
+      // Customers can only ever create orders as themselves, and can never
+      // edit price/items/status after the fact from the client -- only the
+      // owner-app can transition orderStatus/paymentStatus.
+      allow create: if isSignedIn() && request.auth.uid == request.resource.data.userId;
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isOwner());
+      allow update: if isOwner();
+      allow delete: if false;
+    }
+  }
+}

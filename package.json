@@ -1,0 +1,9 @@
+{
+  "name": "grocery-app",
+  "private": true,
+  "workspaces": [
+    "customer-app",
+    "owner-app",
+    "shared"
+  ]
+}

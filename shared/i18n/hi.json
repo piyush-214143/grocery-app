@@ -1,0 +1,149 @@
+{
+  "tabs": {
+    "home": "होम",
+    "dailyItems": "दैनिक",
+    "orders": "ऑर्डर",
+    "profile": "प्रोफ़ाइल"
+  },
+  "common": {
+    "appNameCustomer": "लोकल ग्रोसरी",
+    "appNameOwner": "ग्रोसरी ओनर",
+    "loading": "लोड हो रहा है...",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "add": "जोड़ें",
+    "back": "वापस",
+    "retry": "पुनः प्रयास करें",
+    "noInternet": "इंटरनेट कनेक्शन नहीं है",
+    "yes": "हां",
+    "no": "नहीं",
+    "call": "कॉल करें",
+    "whatsapp": "व्हाट्सएप",
+    "language": "भाषा",
+    "logout": "लॉगआउट",
+    "search": "खोजें"
+  },
+  "auth": {
+    "welcome": "स्वागत है",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "name": "पूरा नाम",
+    "phone": "फ़ोन नंबर",
+    "login": "लॉग इन करें",
+    "signup": "साइन अप करें",
+    "createAccount": "खाता बनाएं",
+    "haveAccount": "पहले से खाता है? लॉग इन करें",
+    "noAccount": "नए हैं? खाता बनाएं",
+    "chooseLanguage": "अपनी भाषा चुनें"
+  },
+  "home": {
+    "categories": "श्रेणियां",
+    "dailyEssentials": "रोज़ की ज़रूरतें",
+    "featured": "विशेष उत्पाद",
+    "shopClosed": "दुकान अभी बंद है",
+    "shopOpen": "अभी खुला है",
+    "searchPlaceholder": "दूध, ब्रेड, सब्जियां खोजें..."
+  },
+  "product": {
+    "addToCart": "जोड़ें",
+    "outOfStock": "स्टॉक में नहीं है",
+    "description": "विवरण"
+  },
+  "cart": {
+    "title": "आपकी कार्ट",
+    "empty": "आपकी कार्ट खाली है",
+    "subtotal": "उप-योग",
+    "minOrderWarning": "न्यूनतम ऑर्डर तक पहुंचने के लिए {{amount}} और जोड़ें",
+    "proceedToOrder": "ऑर्डर करें",
+    "remove": "हटाएं"
+  },
+  "checkout": {
+    "title": "चेकआउट",
+    "deliveryAddress": "डिलीवरी पता",
+    "addAddress": "नया पता जोड़ें",
+    "paymentMode": "भुगतान का तरीका",
+    "cod": "कैश ऑन डिलीवरी",
+    "upi": "यूपीआई से भुगतान करें",
+    "noteToShop": "दुकान के लिए नोट (वैकल्पिक)",
+    "notePlaceholder": "जैसे: पके हुए केले चाहिए",
+    "placeOrder": "ऑर्डर करें",
+    "payWithUpiApp": "किसी भी यूपीआई ऐप से भुगतान करें"
+  },
+  "orderConfirmation": {
+    "title": "ऑर्डर हो गया!",
+    "orderId": "ऑर्डर आईडी",
+    "thankYou": "धन्यवाद, आपका ऑर्डर दुकान को भेज दिया गया है।",
+    "callShop": "दुकान को कॉल करें",
+    "whatsappShop": "दुकान को व्हाट्सएप करें",
+    "viewOrders": "मेरे ऑर्डर देखें"
+  },
+  "orders": {
+    "title": "मेरे ऑर्डर",
+    "noOrders": "आपने अभी तक कोई ऑर्डर नहीं दिया है",
+    "orderDetail": "ऑर्डर विवरण",
+    "repeatOrder": "यह ऑर्डर दोबारा करें",
+    "items": "वस्तुएं",
+    "total": "कुल"
+  },
+  "profile": {
+    "title": "प्रोफ़ाइल",
+    "savedAddresses": "सहेजे गए पते",
+    "settings": "सेटिंग्स"
+  },
+  "dailyItems": {
+    "title": "रोज़ की ज़रूरतें",
+    "subtitle": "आपकी रोज़मर्रा की चीज़ें, एक टैप में",
+    "quickReorder": "सामान्य सूची फिर से ऑर्डर करें"
+  },
+  "orderStatus": {
+    "placed": "ऑर्डर दिया गया",
+    "accepted": "स्वीकृत",
+    "packed": "पैक किया गया",
+    "out_for_delivery": "डिलीवरी के लिए निकला",
+    "delivered": "डिलीवर हो गया",
+    "cancelled": "रद्द"
+  },
+  "owner": {
+    "dashboard": "डैशबोर्ड",
+    "todayOrders": "आज के ऑर्डर",
+    "pendingOrders": "लंबित",
+    "todayRevenue": "आज की कमाई",
+    "shopStatus": "दुकान की स्थिति",
+    "openForOrders": "ऑर्डर के लिए खुला",
+    "closed": "बंद",
+    "liveOrders": "लाइव ऑर्डर",
+    "orderHistory": "ऑर्डर इतिहास",
+    "manageProducts": "उत्पाद प्रबंधित करें",
+    "manageCategories": "श्रेणियां प्रबंधित करें",
+    "shopSettings": "दुकान सेटिंग्स",
+    "addProduct": "उत्पाद जोड़ें",
+    "addCategory": "श्रेणी जोड़ें",
+    "productNameEn": "उत्पाद का नाम (अंग्रेज़ी)",
+    "productNameHi": "उत्पाद का नाम (हिंदी)",
+    "descriptionEn": "विवरण (अंग्रेज़ी)",
+    "descriptionHi": "विवरण (हिंदी)",
+    "price": "कीमत",
+    "unit": "इकाई",
+    "category": "श्रेणी",
+    "uploadImage": "छवि अपलोड करें",
+    "available": "उपलब्ध",
+    "dailyItem": "दैनिक वस्तु",
+    "featured": "विशेष",
+    "shopName": "दुकान का नाम",
+    "ownerPhone": "मालिक का फ़ोन",
+    "ownerWhatsapp": "मालिक का व्हाट्सएप",
+    "address": "पता",
+    "upiId": "यूपीआई आईडी",
+    "minOrderAmount": "न्यूनतम ऑर्डर राशि",
+    "deliveryRadius": "डिलीवरी दायरा (किमी)",
+    "openingHours": "खुलने का समय",
+    "acceptOrder": "स्वीकार करें",
+    "markPacked": "पैक किया गया चिह्नित करें",
+    "markOutForDelivery": "डिलीवरी के लिए निकला",
+    "markDelivered": "डिलीवर हो गया चिह्नित करें",
+    "cancelOrder": "ऑर्डर रद्द करें",
+    "cancelReason": "रद्द करने का कारण"
+  }
+}
