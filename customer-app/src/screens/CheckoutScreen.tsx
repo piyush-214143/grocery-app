@@ -87,7 +87,9 @@ export function CheckoutScreen() {
         orderStatus: 'placed',
         placedAt: now,
         statusUpdatedAt: now,
-        customerNote: note.trim() || undefined,
+        // Firestore rejects `undefined` field values outright, so omit the
+        // key entirely rather than setting it to undefined when there's no note.
+        ...(note.trim() ? { customerNote: note.trim() } : {}),
       });
 
       notifyOwnerOfNewOrder(shop, profile.name, subtotal);

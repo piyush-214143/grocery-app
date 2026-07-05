@@ -1,15 +1,29 @@
-import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { Platform } from 'react-native';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldShowList: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+// Expo Go (SDK 53+) removed remote push support entirely. Worse than just
+// getExpoPushTokenAsync() failing: merely `import`-ing expo-notifications
+// triggers an internal addPushTokenListener() call that throws synchronously
+// and crashes the whole app before it renders anything. So the import itself
+// has to be conditional (require(), not a static import) -- a dev client
+// build is required to actually exercise this code path.
+const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+
+type NotificationsModule = typeof import('expo-notifications');
+let Notifications: NotificationsModule | null = null;
+
+if (!isExpoGo) {
+  Notifications = require('expo-notifications') as NotificationsModule;
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowBanner: true,
+      shouldShowList: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  });
+}
 
 // Returns an Expo push token (not a raw FCM token). Expo's push service
 // relays this to FCM on Android / APNs on iOS for us, so a small app never
@@ -20,6 +34,11 @@ Notifications.setNotificationHandler({
 export async function registerForPushTokenAsync(
   projectId: string | undefined
 ): Promise<string | null> {
+  if (!Notifications) {
+    console.warn('Push notifications require a development build, not Expo Go.');
+    return null;
+  }
+
   if (!Device.isDevice) {
     console.warn('Push notifications require a physical device.');
     return null;

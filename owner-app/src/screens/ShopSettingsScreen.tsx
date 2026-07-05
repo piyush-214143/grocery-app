@@ -59,7 +59,10 @@ export function ShopSettingsScreen() {
         deliveryRadiusKm: parseFloat(deliveryRadiusKm) || 0,
         minOrderAmount: parseFloat(minOrderAmount) || 0,
         openingHours: { open: openTime, close: closeTime },
-        ownerFcmToken: shop?.ownerFcmToken,
+        // Firestore rejects `undefined` field values outright, so omit the
+        // key entirely until a push token actually exists (first save, before
+        // App.tsx's registerForPushTokenAsync effect has run, has none yet).
+        ...(shop?.ownerFcmToken ? { ownerFcmToken: shop.ownerFcmToken } : {}),
       });
       Alert.alert('', 'Shop settings saved.');
     } finally {

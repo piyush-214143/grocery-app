@@ -10,6 +10,8 @@ import {
   deleteDoc,
   setDoc,
   getDoc,
+  type DocumentReference,
+  type Query,
   type Unsubscribe,
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -24,8 +26,39 @@ import {
   type OrderStatus,
 } from '@grocery/shared';
 
+// Right after first-time-setup signup, LoginScreen creates auth user then
+// writes /admins/{uid} as two separate awaited calls -- but Firebase fires
+// onAuthStateChanged (which is what triggers these subscriptions in App.tsx)
+// as soon as the user is created, which can race ahead of the admins/{uid}
+// write finishing. A `permission-denied` at that moment is transient: retry
+// a few times with backoff instead of leaving the listener dead forever.
+function subscribeWithRetry(
+  target: DocumentReference | Query,
+  onNext: (snap: any) => void,
+  retriesLeft = 4
+): Unsubscribe {
+  let unsub: Unsubscribe = () => {};
+  let cancelled = false;
+
+  unsub = onSnapshot(target as any, onNext, (error: any) => {
+    if (cancelled) return;
+    if (error?.code === 'permission-denied' && retriesLeft > 0) {
+      setTimeout(() => {
+        if (!cancelled) unsub = subscribeWithRetry(target, onNext, retriesLeft - 1);
+      }, 700);
+    } else {
+      console.warn('Firestore subscription failed', error);
+    }
+  });
+
+  return () => {
+    cancelled = true;
+    unsub();
+  };
+}
+
 export function subscribeToShop(onChange: (shop: Shop | null) => void): Unsubscribe {
-  return onSnapshot(doc(db, COLLECTIONS.shops, DEFAULT_SHOP_ID), (snap) => {
+  return subscribeWithRetry(doc(db, COLLECTIONS.shops, DEFAULT_SHOP_ID), (snap) => {
     onChange(snap.exists() ? ({ id: snap.id, ...snap.data() } as Shop) : null);
   });
 }
@@ -40,8 +73,8 @@ export function subscribeToCategories(onChange: (categories: Category[]) => void
     where('shopId', '==', DEFAULT_SHOP_ID),
     orderBy('sortOrder', 'asc')
   );
-  return onSnapshot(q, (snap) => {
-    onChange(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Category)));
+  return subscribeWithRetry(q, (snap) => {
+    onChange(snap.docs.map((d: any) => ({ id: d.id, ...d.data() } as Category)));
   });
 }
 
@@ -60,8 +93,8 @@ export async function deleteCategory(id: string): Promise<void> {
 
 export function subscribeToAllProducts(onChange: (products: Product[]) => void): Unsubscribe {
   const q = query(collection(db, COLLECTIONS.products), where('shopId', '==', DEFAULT_SHOP_ID));
-  return onSnapshot(q, (snap) => {
-    onChange(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Product)));
+  return subscribeWithRetry(q, (snap) => {
+    onChange(snap.docs.map((d: any) => ({ id: d.id, ...d.data() } as Product)));
   });
 }
 
@@ -98,8 +131,8 @@ export function subscribeToOrders(onChange: (orders: Order[]) => void): Unsubscr
     where('shopId', '==', DEFAULT_SHOP_ID),
     orderBy('placedAt', 'desc')
   );
-  return onSnapshot(q, (snap) => {
-    onChange(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Order)));
+  return subscribeWithRetry(q, (snap) => {
+    onChange(snap.docs.map((d: any) => ({ id: d.id, ...d.data() } as Order)));
   });
 }
 
